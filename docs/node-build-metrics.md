@@ -138,15 +138,14 @@ The wrapper records both but cannot prove the second didn't recompile.
 
 ## Canonical source and further detail
 
-The workstation dotfiles checkout is
-`/home/alex/projects/github.com/w3irdrobot/dotfiles`:
+The source lives in this repository (`git@github.com:w3irdrobot/agentfiles.git`):
 
 - `scripts/cargo_metrics.py`, `tests/test_cargo_metrics.py`, `docs/cargo-metrics.md`
 - `scripts/node-cleanup.py`, `tests/test_node_cleanup.py`
 - `docs/designs/node-cleanup/001-report.md` (contracts and dated validation)
 - `docs/node-build-metrics.md` (this guide)
 
-The node uses explicitly deployed copies. Its shared dotfiles checkout is not
+The node uses explicitly deployed copies. Its shared agentfiles checkout is not
 necessarily at the workstation revision: do not pull or replace shared agent
 configuration just to update these tools. Inspect current changes and compare
 installed/source hashes before deployment. No Git commit/push is implied by a
