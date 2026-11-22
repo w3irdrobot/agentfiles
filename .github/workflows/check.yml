@@ -1,0 +1,30 @@
+name: Check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Tests
+        run: python3 -m unittest discover -s tests -v
+
+      # The runner's own XDG_CONFIG_HOME would make link.py refuse a scratch home.
+      - name: Link into a scratch home twice
+        run: |
+          home="$(mktemp -d)"
+          link() { env -u XDG_CONFIG_HOME ./link.py --home "$home" --tools maple,codex,claude,opencode; }
+          link
+          if link | grep -v '^Already linked:'; then
+            echo 'The second run changed links.' >&2
+            exit 1
+          fi
