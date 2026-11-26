@@ -29,7 +29,7 @@ It is configuration deployment, not workstation provisioning or agent installati
    credentials, personal SSH/Git config, or the workstation knowledge checkout.
 7. Verify links and skill discovery in a fresh session of each selected tool.
    Check that the shared instructions and any node guidance are actually read.
-   For Paseo and T3 Code, verify discovery in the app with each configured
+   For Paseo, verify discovery in the app with each configured
    provider and check that its process uses the intended home.
 8. Report the checkout path/revision, selected tools, changed links, conflicts,
    and checks actually performed. Do not claim a filesystem check proves runtime

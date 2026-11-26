@@ -12,7 +12,7 @@ Use the repository's existing workflow, not a new deployment implementation.
 
 Confirm target/user/home, selected tools, canonical agentfiles repository, stable
 checkout path, and reviewed revision. Ask for missing choices rather than selecting
-all tools or a moving branch. For Paseo and T3, select the providers the app
+all tools or a moving branch. For Paseo, select the providers the app
 launches and confirm their execution home. Confirm checkout/worktree conventions
 and knowledge access for node guidance. Knowledge remains disabled unless
 explicitly enabled with a verified local path and permitted use; never copy a
@@ -38,7 +38,7 @@ workstation knowledge checkout or its access policy.
    session of each selected app, verify discovery and that shared instructions
    cause node guidance to be read without explicitly prompting it to read that
    file. Asking about execution-environment conventions is a useful check.
-   For Paseo and T3, check discovery in the app and verify each provider process
+   For Paseo, check discovery in the app and verify each provider process
    uses the intended home and config.
 
 Report path/revision, selected consumers, conflicts, and filesystem versus runtime

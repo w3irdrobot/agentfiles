@@ -1,6 +1,6 @@
 ---
 name: install-codex
-description: Install and verify the complete OpenAI Codex CLI runtime on an existing coding node, including matching helper binaries, interactive authentication, and a bounded tool-use smoke test. Use specifically for Codex installation or an incomplete Codex runtime. Does not install Maple, T3, Claude, or shared agent configuration.
+description: Install and verify the complete OpenAI Codex CLI runtime on an existing coding node, including matching helper binaries, interactive authentication, and a bounded tool-use smoke test. Use specifically for Codex installation or an incomplete Codex runtime. Does not install Maple, Claude, or shared agent configuration.
 ---
 
 # Install Codex
@@ -45,6 +45,6 @@ Verify exact CLI version, helper startup, permissions, and effective launcher
 paths. After login, run an approved minimal task in a disposable directory that
 actually invokes a terminal tool (`pwd` or an equivalent harmless bounded command)
 and confirms its working directory. A version check or app-server skills list is
-not sufficient. Test through the intended Maple/T3 integration separately if
-present; do not restart live hosts automatically. Shared instruction/skill setup
+not sufficient. If Maple or Paseo launches Codex, test through that app as well.
+Do not restart live hosts automatically. Shared instruction/skill setup
 belongs to `deploy-agent-config`. Report which checks remain unverified.
