@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
-"""Link shared instructions and skills for selected local execution tools."""
+"""Install shared instructions, skills, and MCP servers for selected tools."""
 
 import argparse
+import json
 import os
 from pathlib import Path
+import shutil
+import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parent
 SKILLS = ROOT / "skills"
 INSTRUCTIONS = ROOT / "instructions/AGENTS.md"
+MCP_SERVERS = ROOT / "mcp/servers.json"
 TOOLS = ("maple", "codex", "claude", "opencode")
 
 
@@ -66,6 +70,58 @@ def preflight(home, plan):
             raise ValueError(f"Refusing to create files through a linked parent: {destination}")
 
 
+def mcp_registrations(home, tools):
+    if "codex" not in tools and "claude" not in tools:
+        return []
+    servers = json.loads(MCP_SERVERS.read_text())
+    registrations = []
+    for tool in ("codex", "claude"):
+        if tool not in tools:
+            continue
+        env = {**os.environ, "HOME": str(home)}
+        if tool == "codex":
+            try:
+                import tomllib
+            except ModuleNotFoundError:
+                raise ValueError("Codex MCP registration requires Python 3.11 or newer") from None
+
+            config = home / ".codex/config.toml"
+            env["CODEX_HOME"] = str(config.parent)
+            config_format = tomllib
+            server_key = "mcp_servers"
+        else:
+            config_dir = Path(env["CLAUDE_CONFIG_DIR"]) if env.get("CLAUDE_CONFIG_DIR") else home
+            config = config_dir / ".claude.json"
+            config_format = json
+            server_key = "mcpServers"
+
+        try:
+            settings = config_format.loads(config.read_text())
+            existing = settings.get(server_key, {}) if isinstance(settings, dict) else None
+        except FileNotFoundError:
+            existing = {}
+        except ValueError:
+            raise ValueError(f"Could not parse MCP settings in {config}") from None
+        if not isinstance(existing, dict):
+            raise ValueError(f"Expected MCP settings to be a table in {config}")
+
+        for name, url in servers.items():
+            if name in existing:
+                print(f"Keeping existing MCP server {name} in {config}")
+                continue
+            if config.is_symlink() or config.parent.is_symlink():
+                raise ValueError(f"Register {name} manually in linked config {config}")
+            executable = shutil.which(tool)
+            if executable is None:
+                raise ValueError(f"Install {tool} to register {name}, or use --skip-mcp")
+            if tool == "codex":
+                args = ["mcp", "add", name, "--url", url]
+            else:
+                args = ["mcp", "add", "--transport", "http", "--scope", "user", name, url]
+            registrations.append((name, config, [executable, *args], env))
+    return registrations
+
+
 def main():
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -74,6 +130,7 @@ def main():
     parser.add_argument("--home", type=Path, default=Path.home(),
                         help="existing target home (default: current user's home)")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--skip-mcp", action="store_true", help="only link instructions and skills")
     parser.add_argument("--tools", required=True,
                         help="comma-separated selection: " + ",".join(TOOLS))
     args = parser.parse_args()
@@ -93,6 +150,7 @@ def main():
             raise ValueError("Codex AGENTS.override.md would shadow shared instructions; review it first")
         plan = links(home, tools)
         preflight(home, plan)
+        registrations = [] if args.skip_mcp else mcp_registrations(home, tools)
         for destination, source in plan:
             if destination.exists() and destination.resolve() == source.resolve():
                 print(f"Already linked: {destination}")
@@ -104,6 +162,14 @@ def main():
                 destination.symlink_to(os.path.relpath(source, destination.parent),
                                        target_is_directory=source.is_dir())
                 print(f"Linked: {destination} -> {source}")
+        for name, config, command, env in registrations:
+            if args.dry_run:
+                print(f"Would register MCP server {name} in {config}")
+                continue
+            result = subprocess.run(command, env=env, capture_output=True)
+            if result.returncode:
+                raise ValueError(f"Could not register MCP server {name} in {config} (exit {result.returncode})")
+            print(f"Registered MCP server {name} in {config}")
     except (OSError, ValueError, RuntimeError) as error:
         print(f"agentfiles: {error}", file=sys.stderr)
         return 1

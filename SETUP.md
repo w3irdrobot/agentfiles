@@ -22,7 +22,9 @@ It is configuration deployment, not workstation provisioning or agent installati
 
 5. Report conflicts and reconcile them with the user. Do not delete or replace
    existing instructions, skills, or links automatically. If the preview succeeds
-   and deployment was requested, repeat without `--dry-run`.
+   and deployment was requested, repeat without `--dry-run`. This registers Exa
+   for selected Claude Code and Codex clients. See the
+   [Exa MCP setup](docs/exa-mcp.md) for verification steps.
 6. If node-specific paths or knowledge access are wanted, create non-secret
    `~/.config/agent-config/node.md` based on `examples/node.md`, only after
    confirming the actual values. Knowledge stays off otherwise. Do not copy

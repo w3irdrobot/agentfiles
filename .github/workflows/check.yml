@@ -24,7 +24,7 @@ jobs:
           link_home="$(mktemp -d)"
           link() {
             env -u CODEX_HOME -u CLAUDE_CONFIG_DIR -u XDG_CONFIG_HOME \
-              ./link.py --home "$link_home" --tools maple,codex,claude,opencode
+              ./link.py --home "$link_home" --tools maple,codex,claude,opencode --skip-mcp
           }
           link
           test "$link_home/.agents/AGENTS.md" -ef instructions/AGENTS.md
