@@ -7,7 +7,8 @@ on my workstation and on worker nodes, and doesn't depend on my dotfiles.
 ```text
 instructions/AGENTS.md   # Global rules every tool reads
 skills/                  # One directory per skill, each with a SKILL.md
-link.py                  # Links the above into each tool's home
+link.py                  # Links instructions and skills, registers MCP servers
+mcp/servers.json         # Shared keyless MCP server definitions
 SETUP.md                 # Workflow for an agent deploying this to a node
 examples/node.md         # Template for per-machine guidance
 scripts/, docs/, tests/  # Worker-node tooling (node-cleanup, cargo-metrics)
@@ -35,6 +36,12 @@ the checkout where it is. Rerun `link.py` after adding a skill.
 To have an agent deploy this to a worker node, point it at [SETUP.md](SETUP.md)
 or the `deploy-agent-config` skill.
 
+## Web search
+
+`link.py` registers Exa in Claude Code and Codex when selected, and the shared
+instructions prefer Exa in those clients. See the [Exa MCP setup](docs/exa-mcp.md)
+for verification steps.
+
 ## Where things land
 
 | Tool | Instructions | Skills |
@@ -58,6 +65,10 @@ installers put in those directories stay put.
 - It doesn't prune. Deleting a skill here leaves its old links dangling; remove
   them by hand.
 - `--home /some/test-home` rehearses against a scratch home.
+- For Claude Code and Codex, it uses the selected client's CLI to add missing
+  MCP servers to user config and preserves existing entries. Codex MCP setup
+  requires Python 3.11 or newer. If your user config is a symlink, add the server
+  in your dotfiles and rerun. Use `--skip-mcp` to link instructions and skills only.
 
 ## Per-machine guidance
 
@@ -70,10 +81,11 @@ check in a fresh session that the agent actually read it.
 
 Pulling new commits into a linked checkout deploys them. Check the checkout's
 status first, fast-forward only, and never reset or stash a node's local edits.
-Then rerun `link.py --dry-run` and `link.py` to pick up new skills. After
-deploying, start a fresh session in each tool and confirm the instructions and
-skills loaded. In Paseo, check the skill suggestions in the composer for each
-provider you use. In standalone Claude Code, use `/context` and `/skills`.
+Then rerun the linker with `--dry-run` and again without it to pick up new skills
+and MCP registrations. After deploying, start a fresh session in each tool and
+confirm the instructions and skills loaded. In Paseo, check the skill suggestions
+in the composer for each provider you use. In standalone Claude Code, use
+`/context` and `/skills`.
 
 ## Worker-node tooling
 

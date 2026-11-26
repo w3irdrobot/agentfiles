@@ -87,6 +87,10 @@
 
 ## Skills and knowledge
 
+- In Claude Code and Codex, prefer the `exa` MCP server for web research when
+  it is available. Use `web_search_exa` to find sources and `web_fetch_exa` to
+  read known URLs. If Exa is unavailable or rate-limited, use another available
+  web tool. Follow the user's choice of search tool or source when specified.
 - Use available skills when the task matches their descriptions. Project-specific
   instructions and established architecture take precedence over personal defaults.
 - Do not assume OpenCode references, MCP servers, subagent names, sandbox profiles,
