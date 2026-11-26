@@ -1,6 +1,6 @@
 ---
 name: install-claude-code
-description: Install and verify Anthropic Claude Code on an existing coding node using a reviewed supported release, interactive authentication, and a bounded tool-use smoke test. Use specifically for Claude Code CLI setup. Does not install Maple, T3, Codex, or shared agent configuration.
+description: Install and verify Anthropic Claude Code on an existing coding node using a reviewed supported release, interactive authentication, and a bounded tool-use smoke test. Use specifically for Claude Code CLI setup. Does not install Maple, Codex, or shared agent configuration.
 ---
 
 # Install Claude Code
@@ -40,7 +40,7 @@ Verify version/launcher, ownership, and discovery in the intended execution
 user/service environment. After login, run a minimal approved task in a disposable
 workspace that actually uses a terminal tool and confirms the intended working
 directory. Keep normal permission checks; don't enable permission bypasses for
-the test. Test the Maple/T3 integration if present, without interrupting active
-work. Deploy shared instructions and skills separately with `deploy-agent-config`,
+the test. If Maple or Paseo launches Claude Code, test through that app without
+interrupting active work. Deploy shared instructions and skills with `deploy-agent-config`,
 then check fresh-session loading. Report installed versus authenticated/tested
 status honestly.

@@ -1,6 +1,6 @@
 ---
 name: install-maple-agent
-description: Install and verify the official Maple Agent host on an existing headless execution node, with signed release verification, a user service, and interactive remote pairing. Use specifically for Maple installation. Not for T3 or provider CLI installation, node provisioning, migration, or unattended upgrades.
+description: Install and verify the official Maple Agent host on an existing headless execution node, with signed release verification, a user service, and interactive remote pairing. Use specifically for Maple installation. Not for provider CLI installation, node provisioning, migration, or unattended upgrades.
 ---
 
 # Install Maple Agent

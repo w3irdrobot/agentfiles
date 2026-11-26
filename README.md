@@ -15,13 +15,16 @@ scripts/, docs/, tests/  # Worker-node tooling (node-cleanup, cargo-metrics)
 
 ## Install
 
-Clone it somewhere stable and link the tools that machine uses:
+Clone it somewhere stable and link the tools that machine uses. For Paseo, run
+the linker on the daemon host as the user that runs its providers. Select those
+providers in `--tools`. This example configures Codex and Claude Code for Paseo
+and keeps OpenCode's native links available. [Paseo provider docs](https://paseo.sh/docs/providers.md)
 
 ```bash
 git clone git@github.com:w3irdrobot/agentfiles.git ~/projects/github.com/w3irdrobot/agentfiles
 cd ~/projects/github.com/w3irdrobot/agentfiles
-./link.py --tools maple,codex,claude,opencode --dry-run
-./link.py --tools maple,codex,claude,opencode
+./link.py --tools codex,claude,opencode --dry-run
+./link.py --tools codex,claude,opencode
 ```
 
 Pick only the tools a machine actually runs; a worker might be just
@@ -69,7 +72,8 @@ Pulling new commits into a linked checkout deploys them. Check the checkout's
 status first, fast-forward only, and never reset or stash a node's local edits.
 Then rerun `link.py --dry-run` and `link.py` to pick up new skills. After
 deploying, start a fresh session in each tool and confirm the instructions and
-skills loaded (in Claude: `/context` and `/skills`).
+skills loaded. In Paseo, check the skill suggestions in the composer for each
+provider you use. In standalone Claude Code, use `/context` and `/skills`.
 
 ## Worker-node tooling
 

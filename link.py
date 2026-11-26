@@ -67,12 +67,15 @@ def preflight(home, plan):
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        epilog="For Paseo, run on the daemon host and select the providers it launches.",
+    )
     parser.add_argument("--home", type=Path, default=Path.home(),
                         help="existing target home (default: current user's home)")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--tools", required=True,
-                        help="comma-separated selection: maple,codex,claude,opencode")
+                        help="comma-separated selection: " + ",".join(TOOLS))
     args = parser.parse_args()
     home = args.home.expanduser().resolve()
     try:
