@@ -4,9 +4,10 @@ Use this workflow when asked to install shared instructions and skills on a node
 It is configuration deployment, not workstation provisioning or agent installation.
 
 1. Confirm which OS user/home executes tasks and which tools to configure:
-   `maple`, `codex`, `claude`, and/or `opencode`. Ask if unclear. Check Git,
-   Python 3, and the selected applications; report missing prerequisites rather
-   than installing them without approval.
+   `maple`, `codex`, `claude`, and/or `opencode`. For Paseo, select the actual
+   providers and use their execution home on the daemon host. Ask if unclear.
+   Check Git, Python 3, and the selected applications; report missing
+   prerequisites rather than installing them without approval.
 2. Reuse a matching checkout of `git@github.com:w3irdrobot/agentfiles.git`. If none
    exists, agree on a stable path and clone it there. Before updating an existing
    checkout, verify its origin, status, and revision. Preserve local changes;
@@ -28,8 +29,8 @@ It is configuration deployment, not workstation provisioning or agent installati
    credentials, personal SSH/Git config, or the workstation knowledge checkout.
 7. Verify links and skill discovery in a fresh session of each selected tool.
    Check that the shared instructions and any node guidance are actually read.
-   For T3 Code, verify its underlying Codex/Claude process uses this same home;
-   do not assume isolated runtimes inherit it.
+   For Paseo and T3 Code, verify discovery in the app with each configured
+   provider and check that its process uses the intended home.
 8. Report the checkout path/revision, selected tools, changed links, conflicts,
    and checks actually performed. Do not claim a filesystem check proves runtime
    loading. Keep the checkout: installed links point into it.

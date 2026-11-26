@@ -18,13 +18,27 @@ jobs:
       - name: Tests
         run: python3 -m unittest discover -s tests -v
 
-      # The runner's own XDG_CONFIG_HOME would make link.py refuse a scratch home.
-      - name: Link into a scratch home twice
+      # Provider home overrides for the runner don't apply to the scratch home.
+      - name: Rehearse provider links for Paseo and standalone tools
         run: |
-          home="$(mktemp -d)"
-          link() { env -u XDG_CONFIG_HOME ./link.py --home "$home" --tools maple,codex,claude,opencode; }
+          link_home="$(mktemp -d)"
+          link() {
+            env -u CODEX_HOME -u CLAUDE_CONFIG_DIR -u XDG_CONFIG_HOME \
+              ./link.py --home "$link_home" --tools maple,codex,claude,opencode
+          }
           link
-          if link | grep -v '^Already linked:'; then
+          test "$link_home/.agents/AGENTS.md" -ef instructions/AGENTS.md
+          test "$link_home/.codex/AGENTS.md" -ef instructions/AGENTS.md
+          test "$link_home/.claude/CLAUDE.md" -ef instructions/AGENTS.md
+          test "$link_home/.config/opencode/AGENTS.md" -ef instructions/AGENTS.md
+          for skill in skills/*/SKILL.md; do
+            name="$(basename "$(dirname "$skill")")"
+            test "$link_home/.agents/skills/$name/SKILL.md" -ef "$skill"
+            test "$link_home/.claude/skills/$name/SKILL.md" -ef "$skill"
+            test "$link_home/.config/opencode/skills/$name/SKILL.md" -ef "$skill"
+          done
+          second_run="$(link)"
+          if grep -v '^Already linked:' <<< "$second_run"; then
             echo 'The second run changed links.' >&2
             exit 1
           fi
